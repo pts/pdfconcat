@@ -33,6 +33,8 @@
  *
  * Limitations:
  *
+ * -- does not support cross-reference streams and objects streams in the
+ *    input PDF
  * -- keeps outlines (bookmarks, hierarchical table of contents) of only the
  *    first PDF (!!)
  * -- doesn't work if the input PDFs have different encryption keys
@@ -454,7 +456,7 @@ static void r_seek_xref(void) {
 static struct XrefEntry *objentry(pdfint_t num, pdfint_t gennum) {
   struct XrefEntry *e;
   char const* emsg;
-  if (num<0 || num+0U>=currs.xrefc) {
+  if (num<0 || (slen_t)0+num>=currs.xrefc) {
     emsg="obj num out of bounds: ";
     err: { char tmp[64];
       sprintf(tmp, "%"SLEN_P"d %"SLEN_P"d obj", num, gennum);
@@ -854,7 +856,7 @@ static slen_t r_copy_trailer(void) {
     #endif
     if (0==strcmp(ibuf,"/Prev")) {
       prev=gettok_int("trailer /Prev");
-      if (prev<OBJ_MIN_OFS || prev+0U>=currs.filesize) erri("invalid prev ofs",0);
+      if (prev<OBJ_MIN_OFS || prev+(slen_t)0>=currs.filesize) erri("invalid prev ofs",0);
     } else if (0==strcmp(ibuf,"/Size")) {
       skipstruct(gettok(), FALSE);
     } else {
@@ -916,15 +918,15 @@ static void r_read_xref(void) {
   currs.xreftc=1;
   currs.trailer1ofs=-1U;
   while (1) {
-    if ((tok=gettok())!='E' || 0!=strcmp(ibuf,"xref")) erri("expected xref",0);
-    if ((tok=gettok())!='1' || (xzero =ibuf_int)<0) erri("expected xref base offset",0);
-    if ((tok=gettok())!='1' || (xcount=ibuf_int)<0) erri("expected xref count",0);
+    if ((tok=gettok())!='E' || 0!=strcmp(ibuf,"xref")) { erri("expected xref",0); return; }
+    if ((tok=gettok())!='1' || (xzero =ibuf_int)<0) { erri("expected xref base offset",0); return; }
+    if ((tok=gettok())!='1' || (xcount=ibuf_int)<0) { erri("expected xref count",0); return; }
     #if DEBUG
       fprintf(stderr,"xref=(%lu+%lu)\n", xzero, xcount);
     #endif
     while ((n=getc(currs.file))>=0 && is_ps_white(n)) {}
     if (n>=0) ungetc(n,currs.file);
-    if (xzero+xcount+0U>currs.xrefc) {
+    if (xzero+xcount+(slen_t)0>currs.xrefc) {
       if (NULL==(currs.xrefs=realloc(currs.xrefs, sizeof(currs.xrefs[0])*(xzero+xcount)))) erri("out of memory for xref",0);
       memset(currs.xrefs+currs.xrefc, '\0', (xzero+xcount-currs.xrefc)*sizeof(currs.xrefs[0]));
       /* ^^^ Dat: initialize .type with '\0' */
