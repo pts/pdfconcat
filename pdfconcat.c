@@ -58,13 +58,17 @@
 #include <stdlib.h> /* exit() */
 #include <errno.h> /* errno */
 
-#if NO_CONFIG
+#if HAVE_CONFIG2_H
+  #include "config2.h" /* by sam2p... */
+  typedef bool sbool;
+#else
   #include <assert.h>
-  #if SIZEOF_INT>=4
+  #include <stdint.h>  /* defines INT_FAST32_MAX */
+  #if INT_FAST32_MAX >= 2147483647
     typedef unsigned slen_t;
     typedef int slendiff_t;
   #  define SLEN_P ""
-  #else
+  #else  /* 16-bit integers -- old */
     typedef unsigned long slen_t;
     typedef long slendiff_t;
   #  define SLEN_P "l"
@@ -73,9 +77,6 @@
   #if ';'!=59 || 'a'!=97
   #  error ASCII system is required to compile this program
   #endif
-#else
-  #include "config2.h" /* by sam2p... */
-  typedef bool sbool;
 #endif
 #if OBJDEP
 #  warning PROVIDES: pdfconcat_main
@@ -943,8 +944,9 @@ static void r_read_xref(void) {
        || ((e->type=xbuf[17])!='n' && xbuf[17]!='f')
        || 2!=sscanf(xbuf, "%"SLEN_P"u%hu", &(e->ofs), &(e->gennum))
        || (dummy=e->gennum)>65535UL /* Dat: tmp= to pacify gcc-3.4 warning: comparison is always false due to limited range of data type */
-       || (xbuf[17]=='n' && (e->ofs<OBJ_MIN_OFS || e->ofs>=currs.filesize))
+       || (xbuf[17]=='n' && e->ofs != 0 && (e->ofs<OBJ_MIN_OFS || e->ofs>=currs.filesize))
          ) erri("invalid xref entry",0);
+      if (e->ofs == 0) e->type = 'f';
       e++;
     }
     if (currs.trailer1ofs==-1U) currs.trailer1ofs=ftell(currs.file);
