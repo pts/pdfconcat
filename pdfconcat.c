@@ -467,7 +467,7 @@ static struct XrefEntry *objentry(pdfint_t num, pdfint_t gennum) {
   #endif
   /* Dat: pdftex creates unused objects like `0000000083 00000 f '
    *      when certain fonts are not subsetted (e.g. `<<cmr10.pfb' in the
-   *	  .map file)
+   *      .map file)
    */
   if ((e=currs.xrefs+num)->type!='n' && e->type!='f') { emsg="bad type for obj: "; goto err; }
   if (e->gennum!=gennum) { emsg="gennum mismatch: "; goto err; }
@@ -1033,7 +1033,7 @@ static void wr_enqueue_struct(sbool copy_p) {
 
 static void w_dump_start(void) {
   if (0!=fseek(curws.wf, 0, SEEK_SET)) errn("cannot begin dump",curws.filename);
-  fprintf(curws.wf, "%s%s", currs.pdf_header, currs.is_binary ? "%αισϊ\n" : "");
+  fprintf(curws.wf, "%s%s", currs.pdf_header, currs.is_binary ? "%\xE1\xE9\xF3\xFA\n" : "");
   curws.is_binary=currs.is_binary; /* Imp: pre-look other inputs */
   curws.outobjc=2;
   curws.txrefa=0;
