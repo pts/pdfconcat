@@ -43,6 +43,11 @@
  * -- cannot verify and/or ensure copyright of PDF documents
  * -- emits various error messages, but it isn't a PDF validator
  * -- /Linearized property is destroyed
+ *
+ * System requirements:
+ *
+ * -- Compiles and works on any Unix system and on MinGW32 (also when
+ *    cross-compiled on Linux with i586-mingw32msvc-gcc).
  */
 
 /*
@@ -1093,7 +1098,7 @@ static void wr_enqueue_catalog(void) {
       pdfint_t a, b;
       if ('1'==gettok() && (a=ibuf_int, TRUE)
        && '1'==gettok() && (b=ibuf_int, TRUE) && 'R'==gettok()
-         ) {} else { r_seek(lastofs); erri("/Pages of /Catalog must be indirect", 0); }
+         ) {} else { r_seek(lastofs); erri("/Pages of /Catalog must be indirect", 0); return; }
       r_seek(lastofs);
       e=objentry(a,b);
       wr_enqueue_struct(FALSE);
