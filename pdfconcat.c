@@ -925,7 +925,7 @@ static void r_read_xref(void) {
     while ((n=getc(currs.file))>=0 && is_ps_white(n)) {}
     if (n>=0) ungetc(n,currs.file);
     if (xzero+xcount+(slen_t)0>currs.xrefc) {
-      if (NULL==(currs.xrefs=realloc(currs.xrefs, sizeof(currs.xrefs[0])*(xzero+xcount)))) erri("out of memory for xref",0);
+      if (NULL==(currs.xrefs=(struct XrefEntry*)realloc(currs.xrefs, sizeof(currs.xrefs[0])*(xzero+xcount)))) erri("out of memory for xref",0);
       memset(currs.xrefs+currs.xrefc, '\0', (xzero+xcount-currs.xrefc)*sizeof(currs.xrefs[0]));
       /* ^^^ Dat: initialize .type with '\0' */
       currs.xrefc=xzero+xcount;
@@ -1050,7 +1050,7 @@ static void w_xref_aset(slen_t num, slen_t ofs) {
     #endif
     if (curws.txrefa<16) curws.txrefa=16;
     while (curws.txrefa<=num) curws.txrefa<<=1;
-    if (NULL==(curws.txrefs=realloc(curws.txrefs, curws.txrefa*sizeof(curws.txrefs[0])))) errn("out of memory for xref_aset",0);
+    if (NULL==(curws.txrefs=(slen_t*)realloc(curws.txrefs, curws.txrefa*sizeof(curws.txrefs[0])))) errn("out of memory for xref_aset",0);
     #ifdef __CHECKER__Z
       memset(curws.txrefs+oa, '\0'
     #endif
@@ -1234,7 +1234,7 @@ static void w_dump_trailer(void) {
 static void w_pull_trailer(void) {
   slen_t ofs=ftell(curws.wf);
   if (0!=fseek(curws.wf, 0, SEEK_END)) { seekerr: errn("cannot seek: ", curws.filename); }
-  if (NULL==(curws.trailer=malloc(1+(curws.trailerlen=ftell(curws.wf)-ofs)))) errn("out of memory for trailer",0);
+  if (NULL==(curws.trailer=(char*)malloc(1+(curws.trailerlen=ftell(curws.wf)-ofs)))) errn("out of memory for trailer",0);
   if (0!=fseek(curws.wf, ofs, SEEK_SET)) goto seekerr;
   if (curws.trailerlen!=fread(curws.trailer, 1, curws.trailerlen, curws.wf)) errn("cannot read trailer: ", curws.filename);
   if (0!=fseek(curws.wf, ofs, SEEK_SET)) goto seekerr; /* superfluous, but ANSI needs it */
@@ -1317,7 +1317,7 @@ int main(int argc, char const* const*argv) {
     fprintf(stderr, "%s: open4write %s: %s\n", PROGNAME, curws.filename, strerror(errno));
     exit(5);
   }
-  if (NULL==(curws.srcpages_nums=malloc(sizeof(curws.srcpages_nums[0])*curws.srcpages_numc))) errn("out of memory for srcpages_nums",0);
+  if (NULL==(curws.srcpages_nums=(slen_t*)malloc(sizeof(curws.srcpages_nums[0])*curws.srcpages_numc))) errn("out of memory for srcpages_nums",0);
 
   r_open(argv[3]);
   r_check_pdf_header();
