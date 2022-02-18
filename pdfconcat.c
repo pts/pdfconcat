@@ -950,7 +950,7 @@ static void r_read_xref(void) {
   currs.catalogofs=ftell(currs.file);
 
   #if DEBUG
-    printf("Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%u, catalogofs=%" SLEN_P"d\n",
+    fprintf(stdout, "Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%u, catalogofs=%" SLEN_P"d\n",
       currs.filename, currs.filesize, currs.xrefc, currs.xreftc, currs.catalogofs);
   #endif
   r_seek(currs.catalogofs);
@@ -1269,7 +1269,7 @@ static void r_open(char const *filename) {
 }
 
 static void r_input_status(void) {
-  printf("Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%" SLEN_P"u, catalogofs=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
+  fprintf(stdout, "Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%" SLEN_P"u, catalogofs=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
     currs.filename, currs.filesize, currs.xrefc, currs.xreftc, currs.catalogofs, currs.pagecount, currs.is_binary);
 }
 static void r_close(void) {
@@ -1280,7 +1280,7 @@ static void r_close(void) {
 }
 
 static void w_output_status(void) {
-  printf("Output PDF (%s): filesize=%lu, xrefc=%" SLEN_P"u, subfiles=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
+  fprintf(stdout, "Output PDF (%s): filesize=%lu, xrefc=%" SLEN_P"u, subfiles=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
     curws.filename, (long)ftell(curws.wf), curws.txrefc, curws.srcpages_numc, curws.pagetotal, curws.is_binary);
 }
 
