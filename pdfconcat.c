@@ -157,7 +157,7 @@ static struct ReadState {
 
 static void erri(char const*msg1, char const*msg2) {
   fflush(stdout);
-  fprintf(stderr, "%s: error at %s:%"SLEN_P"u: %s%s\n",
+  fprintf(stderr, "%s: error at %s:%" SLEN_P"u: %s%s\n",
     PROGNAME, currs.filename, (slen_t)ftell(currs.file), msg1, msg2?msg2:"");
   exit(3);
 }
@@ -209,7 +209,7 @@ static sbool is_wordx(char const *s) {
 static /*inline*/ sbool toInteger(char *s, pdfint_t *ret) {
   /* Dat: for both toInteger() and PDF `-5' and `+5' is OK, `--5' isn't */
   int n=0; /* BUGFIX?? found by __CHECKER__ */
-  return sscanf(s, "%"SLEN_P"i%n", ret, &n)<1 || s[n]!='\0';
+  return sscanf(s, "%" SLEN_P"i%n", ret, &n)<1 || s[n]!='\0';
 }
 
 /** @param b: assume null-terminated @return true on error */
@@ -367,7 +367,7 @@ static char gettok(void) {
       double d;
       /* Dat: PDF doesn't support (but PS does) base-n number such as `16#100' == 256; nor exponential notation (6e7) */
       if (!toInteger(ibuf, &ibuf_int)) {
-        sprintf(ibuf, "%"SLEN_P"d", ibuf_int); ibufb=ibuf+strlen(ibuf); /* compress it */
+        sprintf(ibuf, "%" SLEN_P"d", ibuf_int); ibufb=ibuf+strlen(ibuf); /* compress it */
         return '1';
       }
       /* Dat: call toInteger _before_ toReal */
@@ -436,7 +436,7 @@ static void r_seek_xref(void) {
   if (0==(got=fread(ibuf, 1, 256, currs.file))) erri("cannot read startxref",0);
   p=ibuf+got;
   while (p!=ibuf && (p[-1]!='s' ||
-    1!=sscanf(p,"tartxref%"SLEN_P"i%n",&xrefofs,&n))) p--;
+    1!=sscanf(p,"tartxref%" SLEN_P"i%n",&xrefofs,&n))) p--;
   if (p==ibuf) erri("cannot find startxref",0);
   p[n]='\0';
   if (xrefofs<OBJ_MIN_OFS) erri("invalid startxref num",p+8);
@@ -453,7 +453,7 @@ static struct XrefEntry *objentry(pdfint_t num, pdfint_t gennum) {
   if (num<0 || (slen_t)0+num>=currs.xrefc) {
     emsg="obj num out of bounds: ";
     err: { char tmp[64];
-      sprintf(tmp, "%"SLEN_P"d %"SLEN_P"d obj", num, gennum);
+      sprintf(tmp, "%" SLEN_P"d %" SLEN_P"d obj", num, gennum);
       erri(emsg, tmp);
     }
   }
@@ -476,7 +476,7 @@ static void r_seek_obj(pdfint_t num, pdfint_t gennum) {
   r_seek(e->ofs);
   if ('1'!=gettok() || ibuf_int!=num) { emsg="inobj num mismatch: ";
     err: { char tmp[64];
-      sprintf(tmp, "%"SLEN_P"d %"SLEN_P"d obj", num, gennum);
+      sprintf(tmp, "%" SLEN_P"d %" SLEN_P"d obj", num, gennum);
       erri(emsg, tmp);
     }
   }
@@ -788,7 +788,7 @@ static void skipstruct(char tok, sbool copy_p) {
       lastofs=currs.lastofs; /* Dat: copy_token() already called */
       if ('1'==(tok=gettok()) && (b=ibuf_int, TRUE) && 'R'==(tok=gettok())) {
         if (copy_p) {
-          sprintf(ibuf, "%"SLEN_P"d", b); ibufb=ibuf+strlen(ibuf); copy_token('1');
+          sprintf(ibuf, "%" SLEN_P"d", b); ibufb=ibuf+strlen(ibuf); copy_token('1');
           ibuf[0]='R'; ibuf[1]='\0'; copy_token('R');
         }
       } else r_seek(lastofs);
@@ -939,7 +939,7 @@ static void r_read_xref(void) {
        || !is_digits(xbuf+11, xbuf+16)
        || !is_ps_white(xbuf[16])
        || ((e->type=xbuf[17])!='n' && xbuf[17]!='f')
-       || 2!=sscanf(xbuf, "%"SLEN_P"u%hu", &(e->ofs), &(e->gennum))
+       || 2!=sscanf(xbuf, "%" SLEN_P"u%hu", &(e->ofs), &(e->gennum))
        || (dummy=e->gennum)>65535UL /* Dat: tmp= to pacify gcc-3.4 warning: comparison is always false due to limited range of data type */
        || (xbuf[17]=='n' && e->ofs != 0 && (e->ofs<OBJ_MIN_OFS || e->ofs>=currs.filesize))
          ) erri("invalid xref entry",0);
@@ -958,7 +958,7 @@ static void r_read_xref(void) {
   currs.catalogofs=ftell(currs.file);
 
   #if DEBUG
-    printf("Input PDF (%s): filesize=%"SLEN_P"u, xrefc=%"SLEN_P"u, xreftc=%u, catalogofs=%"SLEN_P"d\n",
+    printf("Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%u, catalogofs=%" SLEN_P"d\n",
       currs.filename, currs.filesize, currs.xrefc, currs.xreftc, currs.catalogofs);
   #endif
   r_seek(currs.catalogofs);
@@ -1009,12 +1009,12 @@ static void wr_enqueue_struct(sbool copy_p) {
           ENQ_PUT(e);
         }
         if (copy_p) {
-          sprintf(ibuf, "%"SLEN_P"d 0 R", e->target_num); ibufb=ibuf+strlen(ibuf);
+          sprintf(ibuf, "%" SLEN_P"d 0 R", e->target_num); ibufb=ibuf+strlen(ibuf);
           copy_token('1');
         }
       } else {
         if (copy_p) {
-          sprintf(ibuf, "%"SLEN_P"d", a); ibufb=ibuf+strlen(ibuf);
+          sprintf(ibuf, "%" SLEN_P"d", a); ibufb=ibuf+strlen(ibuf);
           copy_token('1');
         }
         r_seek(lastofs);
@@ -1066,11 +1066,11 @@ static void w_dump_xref(void) {
   slen_t const *p=curws.txrefs, *pend=p+curws.txrefc;
   if (!curws.lastclosed) putc('\n',curws.wf);
   curws.startxrefofs=ftell(curws.wf);
-  fprintf(curws.wf, "xref\n0 %"SLEN_P"u\n", curws.txrefc); /* Dat: must be "\n" */
+  fprintf(curws.wf, "xref\n0 %" SLEN_P"u\n", curws.txrefc); /* Dat: must be "\n" */
   while (p!=pend) {
     if (*p!=0) {
       if (*p/1000000U>=10000U) errn("offset overflow",0); /* Dat: works with 32 bit arithmetic */
-      fprintf(curws.wf, "%010"SLEN_P"u 00000 n \n", *p++);
+      fprintf(curws.wf, "%010" SLEN_P"u 00000 n \n", *p++);
     } else { fprintf(curws.wf, "0000000000 65535 f \n"); p++; }
   }
   curws.lastclosed=TRUE; curws.colc=0;
@@ -1140,9 +1140,9 @@ static void r_dump_reachable(void) {
     if (!curws.lastclosed) putc('\n',curws.wf);
     w_xref_aset(e->target_num, ftell(curws.wf));
     #if 0
-      fprintf(stderr, "%"SLEN_P"u 0 obj # from %lu\n", e->target_num, e->ofs);
+      fprintf(stderr, "%" SLEN_P"u 0 obj # from %lu\n", e->target_num, e->ofs);
     #endif
-    fprintf(curws.wf, "%"SLEN_P"u 0 obj\n", e->target_num);
+    fprintf(curws.wf, "%" SLEN_P"u 0 obj\n", e->target_num);
     curws.lastclosed=TRUE; curws.colc=0;
     r_seek(e->ofs);
     if ('1'!=gettok() || '1'!=gettok()
@@ -1224,7 +1224,7 @@ static void w_make_trailer(void) {
 static void w_dump_trailer(void) {
   newline();
   fwrite(curws.trailer, 1, curws.trailerlen, curws.wf);
-  fprintf(curws.wf,"/Size %"SLEN_P"u>>\nstartxref\n%"SLEN_P"u\n%%%%EOF\n", curws.txrefc, curws.startxrefofs); /* Dat: must end by "%%EOF\n" */
+  fprintf(curws.wf,"/Size %" SLEN_P"u>>\nstartxref\n%" SLEN_P"u\n%%%%EOF\n", curws.txrefc, curws.startxrefofs); /* Dat: must end by "%%EOF\n" */
   fflush(curws.wf);
   curws.lastclosed=TRUE; curws.colc=0;
 }
@@ -1245,10 +1245,10 @@ static void w_dump_toppages(void) {
   slen_t srci;
   newline();
   w_xref_aset(1, ftell(curws.wf));
-  sprintf(ibuf, "1 0 obj\n<</Type/Pages/Count %"SLEN_P"u/Kids[", curws.pagetotal);
+  sprintf(ibuf, "1 0 obj\n<</Type/Pages/Count %" SLEN_P"u/Kids[", curws.pagetotal);
   ibufb=ibuf+strlen(ibuf); copy_token('[');
   srci=0; while (srci!=curws.srcpages_numc) {
-    sprintf(ibuf, "%"SLEN_P"u", curws.srcpages_nums[srci++]);
+    sprintf(ibuf, "%" SLEN_P"u", curws.srcpages_nums[srci++]);
     ibufb=ibuf+strlen(ibuf); copy_token('1');
     ibuf[0]='0'; ibuf[1]='\0'; ibufb=ibuf+1; copy_token('1');
     ibuf[0]='R'; ibuf[1]='\0'; ibufb=ibuf+1; copy_token('R');
@@ -1277,7 +1277,7 @@ static void r_open(char const *filename) {
 }
 
 static void r_input_status(void) {
-  printf("Input PDF (%s): filesize=%"SLEN_P"u, xrefc=%"SLEN_P"u, xreftc=%"SLEN_P"u, catalogofs=%"SLEN_P"u, #pages=%"SLEN_P"u, is_binary=%d\n",
+  printf("Input PDF (%s): filesize=%" SLEN_P"u, xrefc=%" SLEN_P"u, xreftc=%" SLEN_P"u, catalogofs=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
     currs.filename, currs.filesize, currs.xrefc, currs.xreftc, currs.catalogofs, currs.pagecount, currs.is_binary);
 }
 static void r_close(void) {
@@ -1288,7 +1288,7 @@ static void r_close(void) {
 }
 
 static void w_output_status(void) {
-  printf("Output PDF (%s): filesize=%lu, xrefc=%"SLEN_P"u, subfiles=%"SLEN_P"u, #pages=%"SLEN_P"u, is_binary=%d\n",
+  printf("Output PDF (%s): filesize=%lu, xrefc=%" SLEN_P"u, subfiles=%" SLEN_P"u, #pages=%" SLEN_P"u, is_binary=%d\n",
     curws.filename, (long)ftell(curws.wf), curws.txrefc, curws.srcpages_numc, curws.pagetotal, curws.is_binary);
 }
 
