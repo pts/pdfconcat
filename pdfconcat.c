@@ -48,7 +48,7 @@
 #include <assert.h>
 #include <stdint.h>  /* defines INT_FAST32_MAX */
 
-#if INT_FAST32_MAX >= 2147483647
+#if INT_FAST32_MAX >= 2147483647 || __SIZEOF_INT__ >= 4
   typedef unsigned slen_t;
   typedef int slendiff_t;
 #  define SLEN_P ""
