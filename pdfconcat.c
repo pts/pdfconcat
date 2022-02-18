@@ -2,7 +2,7 @@
   set -ex; \
   CFLAGS="-O3 -s -DNDEBUG=1";  [ "$1" ] && CFLAGS="-g"; \
   CC=gcc; [ _"$1" = _-c ] && CC=checkergcc; \
-  $CC $CFLAGS -DNO_CONFIG=1 -ansi -pedantic -Wunused \
+  $CC $CFLAGS -ansi -pedantic -Wunused \
     -Wall -W -Wstrict-prototypes -Wnested-externs -Winline \
     -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes \
     -Wmissing-declarations "$0" -o pdfconcat; \
