@@ -8,46 +8,17 @@
     -Wmissing-declarations "$0" -o pdfconcat; \
   exit
 */
-/* pdfconcat.c -- ANSI C program to concatenate PDF files
+/* pdfconcat.c -- C89 (ANSI C) program to concatenate PDF files
  * by pts@fazekas.hu at Sat Nov  1 10:19:37 CET 2003
  * -- Sun Nov  2 00:30:25 CET 2003
  *
- * pdfconcat is a small and fast command-line utility written in ANSI C that
- * can concatenate (merge) several PDF files into a long PDF document.
+ * pdfconcat is a small and fast command-line utility written in C89 (ANSI C)
+ * that can concatenate (merge) several PDF files into a long PDF document.
  * External libraries are not required, only ANSI C functions are used.
  * Several features of the output file are taken from the first input file
  * only. For example, outlines (also known as hierarchical bookmarks) in
  * subsequent input files are ignored. pdfconcat compresses its input a
  * little bit by removing whitespace and unused file parts.
- *
- * This program has been tested on various huge PDFs downloaded from the
- * Adobe web site, plus an 1200-pages long mathematics manual typeset by
- * LaTeX, emitted by pdflatex, dvipdfm and `gs -sDEVICE=pdfwrite', totalling
- * 5981 pages in a single PDF file.
- *
- * Features:
- *
- * -- uses few memory (only the xref table is loaded into memory)
- * -- is fast, because of the low level ANSI C usage
- * -- compresses input PDFs by removing whitespace and unused objects
- *
- * Limitations:
- *
- * -- does not support cross-reference streams and objects streams in the
- *    input PDF
- * -- keeps outlines (bookmarks, hierarchical table of contents) of only the
- *    first PDF (!!)
- * -- doesn't work if the input PDFs have different encryption keys
- * -- result is undefined when there are hyperlink naming conflicts
- * -- detects the binaryness of only the first input PDF
- * -- cannot verify and/or ensure copyright of PDF documents
- * -- emits various error messages, but it isn't a PDF validator
- * -- /Linearized property is destroyed
- *
- * System requirements:
- *
- * -- Compiles and works on any Unix system and on MinGW32 (also when
- *    cross-compiled on Linux with i586-mingw32msvc-gcc).
  *
  * The license of pdfconcat is GPL v2 or later:
  *
