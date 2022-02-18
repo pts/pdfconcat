@@ -272,8 +272,8 @@ static char gettok(void) {
     *ibufb++=c;
     return ']';
    case '{': case '}':
-    erri("proc arrays disallowed",0);
-    /* Dat: allowed in PS, but not in PDF */
+    erri("proc arrays disallowed",0);  /* allowed in PS, but not in PDF */
+    break;  /* unreached */
    case '>':
     if (getc(currs.file)!='>') goto err;
     *ibufb++='>'; *ibufb++='>';
@@ -342,11 +342,11 @@ static char gettok(void) {
    case ')': goto err;
    case '/':
     *ibufb++='/';
-    while (ISWSPACE(c,=getc(currs.file))) ;
+    while (ISWSPACE(c,=getc(currs.file))) {}
     /* ^^^ `/ x' are two token in PostScript, but here we overcome the C
      *     preprocessor's feature of including whitespace.
      */
-    /* fall-through, b will begin with '/' */
+    /* fallthrough */ /* b will begin with '/' */
    default: /* /nametype, /integertype or /realtype */
     *ibufb++=c;
     while ((c=getc(currs.file))!=-1 && is_ps_name(c)) {
@@ -392,7 +392,7 @@ static char gettok(void) {
   }
  err:
   erri("syntax error, token expected",0);
-  goto again_getcc; /* notreached */
+  goto again_getcc;  /* unreached */
 }
 
 static void r_check_pdf_header(void) {
@@ -700,7 +700,9 @@ static void pstrhput(register char const* p, char const* pend) {
 static void copy_token(char tok) {
   slen_t len, qlen, hlen;
   switch (tok) {
-   case 0: erri("eof in copy", 0);
+   case 0:
+    erri("eof in copy", 0);
+    break;  /* unreached */
    case '[': case ']': case '<': case '>':
     len=ibufb-ibuf;
 #if 0
@@ -774,7 +776,9 @@ static void skipstruct(char tok, sbool copy_p) {
   while (1) {
     if (copy_p) copy_token(tok);
     switch (tok) {
-     case 0: erri("eof in skipstruct",0);
+     case 0:
+      erri("eof in skipstruct",0);
+      break;  /* unreached */
      case '1': /* Skip a possible `R' */
       lastofs=currs.lastofs; /* Dat: copy_token() already called */
       if ('1'==(tok=gettok()) && (b=ibuf_int, TRUE) && 'R'==(tok=gettok())) {
