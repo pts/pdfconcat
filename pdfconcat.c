@@ -1395,6 +1395,7 @@ int main(int argc, char const* const*argv) {
   fflush(curws.wf);
   w_output_status();
   if (ferror(curws.wf)) errn("error writing output file: ", curws.filename);
+  if (fclose(curws.wf)) errn("error closing output file: ", curws.filename);
   free(curws.trailer);
   free(curws.srcpages_nums);
   if (curws.txrefs!=NULL) free(curws.txrefs);
