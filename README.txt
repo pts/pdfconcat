@@ -39,6 +39,16 @@ Limitations:
 * emits various error messages, but it isn't a PDF validator
 * /Linearized property is destroyed
 
+Because of the limitations of pdfconcat above, it's recommended to use qpdf
+instead of pdfconcat to concatenate arbitrary PDF files:
+
+  $ qpdf --empty --pages in1.pdf 1-z in2.pdf 1-z in3.pdf 1-z -- output.pdf
+
+As an older alternative of qpdf, it's possible to use pdftk to concatenate
+PDF files:
+
+  $ pdftk in1.pdf in2.pdf in3.pdf cat output output.pdf
+
 System requirements:
 
 * Compiles and works on any Unix system and on Windows i386 and amd64 if
