@@ -129,7 +129,7 @@ struct XrefEntry {
   slen_t ofs;
   unsigned short gennum;
   char type; /* 'n' or 'f' */
-  
+
   slen_t target_num; /* 0: not reached yet */
   struct XrefEntry *next;
 };
@@ -233,7 +233,7 @@ static char gettok(void) {
   char *ibufend=ibuf+IBUFSIZE;
   ibufb=ibuf;
 
-#if 0  
+#if 0
   if (ungot==EOFF) return EOFF;
   if (ungot!=NO_UNGOT) { c=ungot; ungot=NO_UNGOT; goto again; }
 #endif
@@ -336,7 +336,7 @@ static char gettok(void) {
       /* putchar(c); */
       *ibufb++=c;
       c=getc(currs.file);
-    } /* WHILE */    
+    } /* WHILE */
     /* if (c==')') return '('; */
     uf_str: erri("unfinished str",0);
    case ')': goto err;
@@ -366,7 +366,7 @@ static char gettok(void) {
         return '1';
       }
       /* Dat: call toInteger _before_ toReal */
-      if (!toReal(ibuf, &d)) { 
+      if (!toReal(ibuf, &d)) {
         /* Dat: `.5' and `6.' are valid PDF reals */
         char *p;
         p=ibuf; while (*p!='\0' && *p!='e' && *p!='E') p++;
@@ -1215,7 +1215,7 @@ static void w_make_trailer(void) {
   if (0!=fseek(curws.wf, pretofs, SEEK_SET)) errn("cannot seek pretofs: ",curws.filename);
   curws.lastclosed=TRUE; curws.colc=0;
 }
-  
+
 static void w_dump_trailer(void) {
   newline();
   fwrite(curws.trailer, 1, curws.trailerlen, curws.wf);
@@ -1275,7 +1275,7 @@ static void r_input_status(void) {
   printf("Input PDF (%s): filesize=%"SLEN_P"u, xrefc=%"SLEN_P"u, xreftc=%"SLEN_P"u, catalogofs=%"SLEN_P"u, #pages=%"SLEN_P"u, is_binary=%d\n",
     currs.filename, currs.filesize, currs.xrefc, currs.xreftc, currs.catalogofs, currs.pagecount, currs.is_binary);
 }
-static void r_close(void) {  
+static void r_close(void) {
   free(currs.xrefs); currs.xrefs=NULL;
   if (ferror(currs.file)) erri("error reading file: ", currs.filename);
   fclose(currs.file); currs.file=NULL;
@@ -1313,7 +1313,7 @@ int main(int argc, char const* const*argv) {
     exit(5);
   }
   if (NULL==(curws.srcpages_nums=malloc(sizeof(curws.srcpages_nums[0])*curws.srcpages_numc))) errn("out of memory for srcpages_nums",0);
-  
+
   r_open(argv[3]);
   r_check_pdf_header();
   r_seek_xref();
