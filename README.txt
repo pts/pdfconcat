@@ -68,21 +68,23 @@ Compiler compatibilty:
 * It should compile without warnings with GCC, Clang and tcc.
 * It should work with any C library. Tested with glibc, uClibc and
   msvcrt.dll.
-* Example compiler command-lines:
+* Example compiler command lines:
 
-    $ gcc                -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ gcc     -std=c89   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ gcc     -std=c99   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ gcc     -std=c11   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ clang   -std=c11   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ tcc                -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ pts-tcc            -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ g++     -std=c++98 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ g++     -std=c++11 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ g++     -std=c++14 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ g++     -std=c++17 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ g++     -std=c++20 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
-    $ clang++ -std=c++14 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ gcc                             -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ gcc                  -std=c89   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ gcc                  -std=c99   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ gcc                  -std=c11   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ i686-w64-mingw32-gcc -std=c89   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat.exe
+    $ clang                -std=c11   -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ tcc                             -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ pts-tcc                         -O3 -s -DNDEBUG=1           -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ g++                  -std=c++98 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ g++                  -std=c++11 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ g++                  -std=c++14 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ g++                  -std=c++17 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ g++                  -std=c++20 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat
+    $ i686-w64-mingw32-g++ -std=c++98 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Winline -Wpointer-arith -Wcast-qual -Wmissing-declarations pdfconcat.c -o pdfconcat.exe
+    $ clang++              -std=c++14 -O3 -s -DNDEBUG=1 -pedantic -Wunused -Wall -W -Wstrict-prototypes -Wnested-externs -Winline -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wmissing-prototypes -Wmissing-declarations pdfconcat.c -o pdfconcat
 
 The license of pdfconcat is GPL v2 or later:
 
