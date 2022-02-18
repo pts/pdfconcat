@@ -8,7 +8,7 @@
     -Wmissing-declarations "$0" -o pdfconcat; \
   exit
 */
-/* pdfconcat.c -- C89 (ANSI C) program to concatenate PDF files
+/* pdfconcat.c: C89 (ANSI C) program to concatenate PDF files
  * by pts@fazekas.hu at Sat Nov  1 10:19:37 CET 2003
  * -- Sun Nov  2 00:30:25 CET 2003
  *
