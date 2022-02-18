@@ -41,12 +41,66 @@
  * Dat: ungetc() destroys value of ftell(), even after getc()...
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h> /* exit() */
-#include <errno.h> /* errno */
-#include <assert.h>
-#include <stdint.h>  /* defines INT_FAST32_MAX */
+#ifdef __TINYC__  /* pts-tcc, tcc (Tiny C Compiler) by Fabrice Bellard. https://bellard.org/tcc/ */
+  #ifndef __SIZEOF_INT__
+  #define __SIZEOF_INT__ 4
+  #endif
+  #ifndef INT_FAST32_MAX
+  #define INT_FAST32_MAX 2147483647
+  #endif
+  #define NULL ((void *)0)
+  typedef unsigned int size_t;  /* TODO(pts): 64-bit tcc. */
+
+  /* errno.h */
+  extern int errno;
+
+  /* stdlib.h */
+  void exit(int status);
+  void *malloc(size_t size);
+  void free(void *ptr);
+  void *calloc(size_t nmemb, size_t size);
+  void *realloc(void *ptr, size_t size);
+
+  /* string.h */
+  int memcmp(const void *s1, const void *s2, size_t n);
+  void *memcpy(void *dest, const void *src, size_t n);
+  void *memset(void *s, int c, size_t n);
+  int strcmp(const char *s1, const char *s2);
+  size_t strlen(const char *s);
+  char *strerror(int errnum);
+
+  /* stdio.h */
+  #define SEEK_SET 0
+  #define SEEK_CUR 1
+  #define SEEK_END 2
+  typedef struct FILE FILE;
+  extern FILE* stdout;
+  extern FILE* stderr;
+  FILE *fopen(const char *path, const char *mode);
+  int fprintf(FILE *stream, const char *format, ...);
+  int sprintf(char *str, const char *format, ...);
+  int putc(int c, FILE *stream);
+  int getc(FILE *stream);
+  int ungetc(int c, FILE *stream);
+  size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+  int fseek(FILE *stream, long offset, int whence);
+  size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
+  int fflush(FILE *stream);
+  int ferror(FILE *stream);
+  int fclose(FILE *stream);
+  long ftell(FILE *stream);
+  int sscanf(const char *str, const char *format, ...);
+
+  /* assert.h */
+  #define assert(x) do {} while (0)
+#else
+#  include <stdio.h>
+#  include <string.h>
+#  include <stdlib.h> /* exit() */
+#  include <errno.h> /* errno */
+#  include <assert.h>
+#  include <stdint.h>  /* defines INT_FAST32_MAX */
+#endif
 
 #if INT_FAST32_MAX >= 2147483647 || __SIZEOF_INT__ >= 4
   typedef unsigned slen_t;
