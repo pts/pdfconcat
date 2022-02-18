@@ -45,29 +45,21 @@
 #include <string.h>
 #include <stdlib.h> /* exit() */
 #include <errno.h> /* errno */
+#include <assert.h>
+#include <stdint.h>  /* defines INT_FAST32_MAX */
 
-#if HAVE_CONFIG2_H
-  #include "config2.h" /* by sam2p... */
-  typedef bool sbool;
-#else
-  #include <assert.h>
-  #include <stdint.h>  /* defines INT_FAST32_MAX */
-  #if INT_FAST32_MAX >= 2147483647
-    typedef unsigned slen_t;
-    typedef int slendiff_t;
-  #  define SLEN_P ""
-  #else  /* 16-bit integers -- old */
-    typedef unsigned long slen_t;
-    typedef long slendiff_t;
-  #  define SLEN_P "l"
-  #endif
-  typedef char sbool;
-  #if ';'!=59 || 'a'!=97
-  #  error ASCII system is required to compile this program
-  #endif
+#if INT_FAST32_MAX >= 2147483647
+  typedef unsigned slen_t;
+  typedef int slendiff_t;
+#  define SLEN_P ""
+#else  /* 16-bit integers -- old */
+  typedef unsigned long slen_t;
+  typedef long slendiff_t;
+#  define SLEN_P "l"
 #endif
-#if OBJDEP
-#  warning PROVIDES: pdfconcat_main
+typedef char sbool;
+#if ';'!=59 || 'a'!=97
+#  error ASCII system is required to compile this program
 #endif
 
 #if __cplusplus >= 201700
