@@ -70,6 +70,11 @@
 #  warning PROVIDES: pdfconcat_main
 #endif
 
+#if __cplusplus >= 201700
+#undef  register
+#define register  /* Pacify g++ -std=c++17 warning -Wregister.*/
+#endif
+
 #undef  TRUE
 #define TRUE 1
 #undef  FALSE
